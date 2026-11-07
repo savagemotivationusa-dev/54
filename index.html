@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plateforme de français – 2ème année secondaire</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--tx:#1d2433;--mu:#667085;--pr:#3b5bdb;--ok:#2f9e44;--ko:#e03131;--bd:#e3e7ef;--hl:#eef2ff}
+:root[data-t=dark]{--bg:#0f1420;--card:#171e2e;--tx:#e6eaf3;--mu:#98a2b3;--pr:#7c9cff;--ok:#51cf66;--ko:#ff6b6b;--bd:#27314a;--hl:#1e2745}
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--tx);display:flex;min-height:100vh}
+aside{width:260px;background:var(--card);border-right:1px solid var(--bd);padding:16px;position:sticky;top:0;height:100vh;overflow:auto;flex:none}
+aside h1{font-size:17px;margin:0 0 4px}aside small{color:var(--mu)}
+nav button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--tx);padding:8px 10px;border-radius:8px;cursor:pointer;font:inherit;font-size:14px}
+nav button:hover,nav button.on{background:var(--hl);color:var(--pr)}nav h4{margin:14px 0 4px;font-size:11px;text-transform:uppercase;color:var(--mu);letter-spacing:.05em}
+main{flex:1;padding:24px;max-width:900px;margin:0 auto;width:100%}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.stat b{font-size:26px;display:block;color:var(--pr)}
+.rule{background:var(--hl);border-left:4px solid var(--pr);padding:10px 14px;border-radius:8px;margin:10px 0}
+.warn{border-left-color:#f08c00}.tag{font-size:12px;padding:2px 8px;border-radius:99px;background:var(--hl);color:var(--pr)}
+button.b,.btn{background:var(--pr);color:#fff;border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font:inherit;font-size:14px;margin:4px 4px 4px 0}
+button.g{background:none;color:var(--pr);border:1px solid var(--pr)}
+.bar{height:8px;background:var(--bd);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pr)}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{border:1px solid var(--bd);padding:6px 10px;text-align:left}th{background:var(--hl)}
+input[type=text],input[type=search]{width:100%;padding:9px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit}
+.q label{display:block;padding:4px 0;cursor:pointer}.res{margin-top:6px;font-size:14px;padding:8px 10px;border-radius:8px}.res.y{background:rgba(47,158,68,.15)}.res.n{background:rgba(224,49,49,.13)}
+#menu{display:none}
+@media(max-width:800px){body{display:block}aside{position:fixed;left:-270px;z-index:9;transition:.2s;height:100%}aside.open{left:0}#menu{display:inline-block;position:fixed;top:8px;right:8px;z-index:10}main{padding:54px 14px 20px}}
+@media print{aside,#menu,.noprint{display:none!important}body{display:block;background:#fff;color:#000}.card{border:0}}
+</style></head><body>
+<button id="menu" class="b" onclick="document.querySelector('aside').classList.toggle('open')">☰ Menu</button>
+<aside><h1>📘 Français – 2ème année</h1><small>Plateforme de révision</small><nav id="nav"></nav>
+<div style="margin-top:14px"><button class="b g" onclick="toggleTheme()">🌓 Thème</button><button class="b g" onclick="resetAll()">Réinitialiser</button></div></aside>
+<main id="app"></main>
+<script>
+"use strict";
+const L=[
+{id:"l1",tri:"Langue",t:"Passé composé et imparfait",obj:["Distinguer l'action ponctuelle de l'action durable ou habituelle","Former correctement les deux temps"],
+body:`<p>Pour raconter au passé, on combine souvent deux temps : l'<b>imparfait</b> installe le décor, le <b>passé composé</b> fait avancer l'histoire.</p>
+<div class="rule"><b>Imparfait</b> : description, habitude, action en cours. Radical de « nous » au présent + <i>-ais, -ais, -ait, -ions, -iez, -aient</i> (nous finissons → je finissais).<br><b>Passé composé</b> : action précise et terminée. Auxiliaire <i>avoir/être</i> au présent + participe passé (j'ai fini, elle est partie).</div>
+<p>Exemple : <i>Il pleuvait (décor) quand je suis sorti (événement).</i> Autre exemple : <i>Chaque été, nous allions à la mer (habitude).</i></p>
+<div class="rule warn"><b>Erreur fréquente :</b> employer le passé composé pour une description (« Il a fait beau » au lieu de « Il faisait beau » quand on décrit le décor).</div>
+<p>Cas particulier : les verbes en -ier font -iions, -iiez à l'imparfait (nous étudiions). Les verbes pronominaux et de mouvement (aller, partir, venir, arriver, sortir, rester…) prennent <i>être</i>.</p>`,
+sum:"Imparfait = décor/habitude. Passé composé = événement terminé. Auxiliaire être pour les verbes de mouvement et pronominaux.",
+q:[{k:"qcm",q:"Dans « Il pleuvait quand je suis sorti », « pleuvait » est à :",o:["Passé composé","Imparfait","Plus-que-parfait"],a:1,w:"« Pleuvait » décrit le décor : imparfait (-ait)."},
+{k:"fill",q:"Hier, nous (aller) au marché. → nous …",a:["sommes allés","sommes allées"],w:"Aller se conjugue avec être : nous sommes allés."},
+{k:"vf",q:"L'imparfait exprime une action ponctuelle et terminée.",a:false,w:"Faux : c'est le rôle du passé composé. L'imparfait exprime durée, habitude, description."},
+{k:"qcm",q:"Quand j'étais petit, je … au football chaque samedi.",o:["ai joué","jouais","joue"],a:1,w:"Chaque samedi = habitude passée → imparfait."}]},
+{id:"l2",tri:"Langue",t:"L'accord du participe passé",obj:["Accorder le participe avec être et avec avoir","Repérer le COD placé avant le verbe"],
+body:`<p>Le participe passé employé seul s'accorde comme un adjectif. Avec un auxiliaire, deux règles.</p>
+<div class="rule"><b>Avec être</b> : accord avec le sujet (elles sont parties).<br><b>Avec avoir</b> : accord avec le COD <u>seulement s'il est placé avant</u> le verbe (les fleurs que j'ai cueillies). Sinon, invariable (j'ai cueilli des fleurs).</div>
+<p>Méthode : 1) repérer l'auxiliaire ; 2) si avoir, chercher le COD en posant « quoi ? / qui ? » après le verbe ; 3) vérifier s'il est avant ; 4) accorder en genre et en nombre.</p>
+<div class="rule warn"><b>Piège :</b> « Les lettres qu'il a écrit » est faux ; « que » (= les lettres, COD placé avant) impose « écrites ».</div>`,
+sum:"être → accord avec le sujet. avoir → accord avec le COD placé avant, sinon invariable.",
+q:[{k:"fill",q:"Les fleurs que j'ai (cueillir) sont belles. → …",a:["cueillies"],w:"COD « que » = fleurs (féminin pluriel), placé avant : cueillies."},
+{k:"fill",q:"Elles sont (partir) tôt. → …",a:["parties"],w:"Avec être, accord avec le sujet féminin pluriel : parties."},
+{k:"qcm",q:"Avec avoir, le participe passé s'accorde avec :",o:["Le sujet","Le COD placé avant le verbe","Jamais"],a:1,w:"Règle : COD placé avant."},
+{k:"vf",q:"« Les lettres qu'il a écrit » est correct.",a:false,w:"Faux : « écrites » (COD « que » = lettres, placé avant)."}]},
+{id:"l3",tri:"Expression",t:"Les connecteurs logiques",obj:["Relier les idées d'un texte","Choisir le connecteur selon la relation logique"],
+body:`<p>Les connecteurs organisent le raisonnement. Chacun exprime un rapport précis.</p>
+<table><tr><th>Rapport</th><th>Connecteurs</th></tr><tr><td>Cause</td><td>parce que, car, puisque, en effet</td></tr><tr><td>Conséquence</td><td>donc, alors, par conséquent, c'est pourquoi</td></tr><tr><td>Opposition</td><td>mais, cependant, pourtant, en revanche</td></tr><tr><td>Addition</td><td>et, de plus, en outre</td></tr><tr><td>Concession</td><td>bien que, quoique (+ subjonctif)</td></tr><tr><td>Ordre</td><td>d'abord, ensuite, enfin</td></tr></table>
+<div class="rule warn"><b>Attention :</b> « bien que » est suivi du subjonctif : <i>Bien qu'il soit fatigué, il travaille.</i></div>`,
+sum:"Choisir le connecteur d'après le rapport logique : cause, conséquence, opposition, addition, concession, ordre.",
+q:[{k:"qcm",q:"Quel connecteur exprime l'opposition ?",o:["donc","cependant","car"],a:1,w:"« Cependant » oppose deux idées."},
+{k:"fill",q:"Il est fatigué, … il va se coucher. (conséquence, un mot)",a:["donc","alors"],w:"« Donc » ou « alors » introduisent une conséquence."},
+{k:"qcm",q:"« Bien qu'il … malade, il vient. »",o:["est","soit","sera"],a:1,w:"Bien que + subjonctif : soit."},
+{k:"vf",q:"« Car » introduit une cause.",a:true,w:"Vrai : car = parce que."}]},
+{id:"l4",tri:"Expression",t:"Exprimer la cause et la conséquence",obj:["Distinguer cause et conséquence dans une phrase","Utiliser les subordonnants adaptés"],
+body:`<p>La <b>cause</b> répond à « pourquoi ? », la <b>conséquence</b> à « qu'est-ce qui en résulte ? ».</p>
+<div class="rule"><b>Cause</b> : parce que, puisque (cause connue de tous), comme (en début de phrase), grâce à (effet positif), à cause de (effet négatif).<br><b>Conséquence</b> : si bien que, de sorte que, tellement… que, si… que, donc.</div>
+<p><i>Il a échoué parce qu'il n'a pas révisé</i> (cause). <i>Il n'a pas révisé, si bien qu'il a échoué</i> (conséquence).</p>
+<div class="rule warn"><b>Piège :</b> « grâce à » s'emploie pour une cause heureuse ; « à cause de » pour une cause plutôt négative.</div>`,
+sum:"Cause : parce que, puisque, comme, grâce à, à cause de. Conséquence : donc, si bien que, tellement… que.",
+q:[{k:"qcm",q:"« Il a réussi grâce à son travail. » Cette phrase exprime :",o:["Une cause","Une conséquence","Une opposition"],a:0,w:"« Grâce à » introduit une cause."},
+{k:"vf",q:"« Puisque » introduit une cause que l'interlocuteur connaît déjà.",a:true,w:"Vrai : « Puisque tu le sais, je ne répète pas »."},
+{k:"qcm",q:"« Il est tellement fatigué qu'il s'endort. » « qu'il s'endort » exprime :",o:["La cause","La conséquence","Le but"],a:1,w:"Tellement… que annonce la conséquence."},
+{k:"fill",q:"Il n'a pas révisé, … bien qu'il a échoué. (complète le groupe de deux mots : « … bien que »)",a:["si"],w:"« Si bien que » = conséquence."}]},
+{id:"l5",tri:"Lecture-écriture",t:"Le texte argumentatif",obj:["Identifier thèse, arguments et exemples","Organiser un paragraphe argumentatif"],
+body:`<p>Un texte argumentatif défend une opinion pour convaincre.</p>
+<div class="rule"><b>Thèse</b> : l'opinion défendue. <b>Argument</b> : raison qui soutient la thèse. <b>Exemple</b> : fait précis qui illustre l'argument. <b>Conclusion</b> : reprise de la thèse.</div>
+<p>Plan conseillé : introduction (sujet + thèse) ; 2 ou 3 paragraphes (un argument + un exemple chacun, reliés par des connecteurs) ; conclusion.</p>
+<p>Exemple de thèse : <i>Les réseaux sociaux nuisent à la concentration.</i> Argument : les notifications interrompent le travail. Exemple : un élève qui consulte son téléphone toutes les dix minutes.</p>
+<div class="rule warn"><b>Erreur fréquente :</b> donner un exemple sans l'expliquer. Dites toujours en quoi il prouve l'argument.</div>`,
+sum:"Thèse → arguments → exemples → conclusion, avec connecteurs logiques.",
+q:[{k:"qcm",q:"La thèse est :",o:["Un exemple","L'opinion défendue","La conclusion seulement"],a:1,w:"La thèse est l'opinion que l'auteur défend."},
+{k:"vf",q:"Un exemple sert à illustrer un argument.",a:true,w:"Vrai."},
+{k:"qcm",q:"Quel élément NE fait PAS partie d'un texte argumentatif ?",o:["Argument","Exemple","Liste de courses"],a:2,w:"La liste de courses n'a pas de fonction argumentative."},
+{k:"fill",q:"Pour convaincre, on appuie la thèse par des … (un mot, pluriel)",a:["arguments"],w:"Les arguments soutiennent la thèse."}]}];
+const GLOS={"Imparfait":"Temps du passé : description, habitude, action en cours.","Passé composé":"Temps du passé : action terminée (auxiliaire + participe).","COD":"Complément d'objet direct : répond à « quoi ? / qui ? » sans préposition.","Connecteur logique":"Mot qui relie deux idées et exprime un rapport logique.","Thèse":"Opinion défendue dans un texte argumentatif.","Argument":"Raison qui soutient la thèse.","Subjonctif":"Mode employé après « bien que », « il faut que »…","Concession":"Idée qui admet un obstacle mais n'empêche pas le résultat."};
+const TEXT={t:"Texte (écrit pour ce devoir blanc, non officiel) : « Chaque matin, Sami prenait le bus pour aller au lycée. Ce jour-là, il a oublié son cartable. Comme il craignait d'arriver en retard, il a couru jusqu'à l'arrêt. Il était essoufflé, mais il a réussi à monter. »",
+q:[{k:"qcm",q:"Pourquoi Sami a-t-il couru ?",o:["Il aimait courir","Il craignait d'arriver en retard","Il avait faim"],a:1,w:"Le texte donne la cause avec « comme il craignait… »."},
+{k:"vf",q:"Sami a réussi à monter dans le bus.",a:true,w:"Vrai : « il a réussi à monter »."},
+{k:"qcm",q:"« Chaque matin, Sami prenait le bus » : « prenait » exprime :",o:["Une habitude","Un événement ponctuel","Un futur"],a:0,w:"Imparfait + chaque matin = habitude."}]};
+const PROD=["Thèse claire","Au moins 2 arguments distincts","Exemples précis expliqués","Connecteurs logiques variés","Orthographe et accords soignés"];
+const K="pf2s_v1";let S=JSON.parse(localStorage.getItem(K)||"null")||{done:{},sc:{},last:null,theme:"light"};
+const save=()=>localStorage.setItem(K,JSON.stringify(S));
+document.documentElement.dataset.t=S.theme;
+const $=s=>document.querySelector(s),app=$("#app");
+const norm=s=>s.toLowerCase().trim().replace(/\s+/g," ");
+function toggleTheme(){S.theme=S.theme=="dark"?"light":"dark";document.documentElement.dataset.t=S.theme;save()}
+function resetAll(){if(confirm("Effacer toute la progression ?")){S={done:{},sc:{},last:null,theme:S.theme};save();go("home")}}
+function nav(){let h='<h4>Général</h4><button onclick="go(\'home\')">🏠 Tableau de bord</button><button onclick="go(\'search\')">🔎 Recherche & glossaire</button><button onclick="go(\'fiches\')">🗂 Fiches de révision</button><button onclick="go(\'devoir\')">📝 Devoir blanc</button><button onclick="go(\'revision\')">🎯 Révision ciblée</button>';
+["Langue","Expression","Lecture-écriture"].forEach(t=>{h+="<h4>"+t+"</h4>"+L.filter(l=>l.tri==t).map(l=>`<button onclick="go('${l.id}')">${S.done[l.id]?"✅":"📖"} ${l.t}</button>`).join("")});$("#nav").innerHTML=h}
+function pct(id){const s=S.sc[id];return s?s.best:null}
+function go(v){nav();$("aside").classList.remove("open");window.scrollTo(0,0);
+if(v=="home")home();else if(v=="search")search();else if(v=="fiches")fiches();else if(v=="devoir")devoir();else if(v=="revision")revision();else lesson(v)}
+function home(){const d=Object.keys(S.done).length,ex=Object.values(S.sc).reduce((a,s)=>a+s.h.length,0),av=Object.values(S.sc).map(s=>s.best);
+const m=av.length?Math.round(av.reduce((a,b)=>a+b,0)/av.length):0;
+app.innerHTML=`<div class="card"><h2>Tableau de bord</h2><div class="bar"><i style="width:${d/L.length*100}%"></i></div><p>Progression : ${d}/${L.length} cours terminés</p></div>
+<div class="grid"><div class="card stat"><b>${L.length}</b>cours</div><div class="card stat"><b>${d}</b>terminés</div><div class="card stat"><b>${ex}</b>séries faites</div><div class="card stat"><b>${m}%</b>moyenne (meilleurs scores)</div></div>
+<div class="card"><b>Dernière activité :</b> ${S.last||"aucune"}<br><b>Objectif :</b> terminer chaque cours puis obtenir au moins 75 % aux exercices.</div>
+<div class="card rule warn"><b>Transparence sur le contenu</b><br>Le programme officiel tunisien de français de 2ème année n'a pas pu être retrouvé en ligne. Le PDF fourni est un programme <u>algérien</u> (2019). Les cours ci-dessous sont des <b>compléments pédagogiques</b> écrits par Claude, <u>non vérifiés officiellement</u> : à confronter avec votre manuel et votre professeur.</div>`}
+function lesson(id){const l=L.find(x=>x.id==id);app.innerHTML=`<div class="card"><span class="tag">${l.tri} · complément non vérifié</span><h2>${l.t}</h2><b>Objectifs</b><ul>${l.obj.map(o=>"<li>"+o+"</li>").join("")}</ul>${l.body}
+<div class="rule"><b>À mémoriser :</b> ${l.sum}</div><div class="noprint"><button class="b" onclick="done('${l.id}')">✔ Marquer comme terminé</button><button class="b g" onclick="document.getElementById('ex').scrollIntoView()">Passer aux exercices</button><button class="b g" onclick="print()">🖨 Imprimer</button></div></div>
+<div class="card" id="ex"><h3>Exercices</h3><div id="qs"></div></div>`;qs($("#qs"),l.q.map(q=>({...q,p:1})),id,null)}
+function done(id){S.done[id]=1;S.last="Cours terminé : "+L.find(l=>l.id==id).t;save();nav();alert("Cours marqué comme terminé.")}
+function qs(box,list,key,maxPts){box.innerHTML=list.map((q,i)=>`<div class="q card"><b>${i+1}. ${q.q}</b>`+(q.k=="fill"?`<input type="text" id="${key}${i}" autocomplete="off">`:(q.k=="vf"?["Vrai","Faux"]:q.o).map((o,j)=>`<label><input type="radio" name="${key}${i}" value="${j}"> ${o}</label>`).join(""))+`<div id="r${key}${i}"></div></div>`).join("")+`<button class="b" id="chk">Corriger</button><button class="b g" onclick="go(window.cur)">Recommencer</button><div id="sc${key}"></div>`;window.cur=key;
+$("#chk").onclick=()=>{let pts=0,tot=0;list.forEach((q,i)=>{let ok=false;if(q.k=="fill")ok=q.a.map(norm).includes(norm($("#"+key+i).value));else{const c=document.querySelector(`input[name=${key+i}]:checked`);const v=c?+c.value:-1;ok=q.k=="vf"?(v==(q.a?0:1)):v==q.a}
+tot+=q.p;if(ok)pts+=q.p;const r=$("#r"+key+i);r.className="res "+(ok?"y":"n");r.innerHTML=(ok?"✅ Correct. ":"❌ Incorrect. ")+q.w+(!ok&&q.k=="fill"?" Réponse attendue : "+q.a[0]+".":"")});
+const p=Math.round(pts/tot*100);const s=S.sc[key]||{best:0,last:0,h:[]};s.best=Math.max(s.best,p);s.last=p;s.h.push({p,d:new Date().toLocaleDateString("fr-FR")});S.sc[key]=s;S.last="Exercices : "+(L.find(l=>l.id==key)||{t:"Devoir blanc"}).t;save();
+$("#sc"+key).innerHTML=`<div class="card"><b>Score : ${pts}/${tot} (${p} %)</b><br>Meilleur : ${s.best} % · Dernier : ${s.last} % · Tentatives : ${s.h.length}</div>`}}
+function devoir(){const lg=[L[0].q[0],L[1].q[0],L[2].q[0],L[3].q[0],L[4].q[0]];
+app.innerHTML=`<div class="card"><span class="tag">Devoir blanc créé par Claude – pas un sujet officiel</span><h2>Devoir blanc n°1 (durée indicative : 1 h)</h2><p>${TEXT.t}</p><b>I. Compréhension (6 pts) · II. Langue (10 pts) · III. Production écrite (4 pts, auto-évaluation)</b></div><div id="dv"></div>
+<div class="card"><h3>III. Production écrite</h3><p>Sujet : « Faut-il limiter l'usage du téléphone portable au lycée ? » Rédigez un paragraphe argumenté sur papier, puis cochez les critères remplis (1 pt chacun, maximum 4).</p>${PROD.map((c,i)=>`<label style="display:block"><input type="checkbox" class="pc"> ${c}</label>`).join("")}<button class="b" onclick="prod()">Calculer la note finale</button><div id="fin"></div></div>`;
+const list=[...TEXT.q.map(q=>({...q,p:2})),...lg.map(q=>({...q,p:2}))];qs($("#dv"),list,"dv",16);
+window.cur="devoir";const c=$("#chk");const o=c.onclick;c.onclick=()=>{o();window.dvp=(S.sc.dv.last/100)*16}}
+function prod(){const n=Math.min(4,[...document.querySelectorAll(".pc")].filter(x=>x.checked).length);const q=(window.dvp==null?null:window.dvp);$("#fin").innerHTML=q==null?"<p>Corrigez d'abord les parties I et II.</p>":`<div class="card"><b>Note : ${(q+n).toFixed(1)} / 20</b></div>`}
+function revision(){const w=L.filter(l=>pct(l.id)!==null&&pct(l.id)<75).concat(L.filter(l=>pct(l.id)===null));
+app.innerHTML=`<div class="card"><h2>Notions à revoir</h2>${w.length?"<ul>"+w.map(l=>`<li><a href="#" onclick="go('${l.id}');return false">${l.t}</a> — ${pct(l.id)===null?"pas encore essayé":"meilleur score "+pct(l.id)+" %"}</li>`).join("")+"</ul>":"<p>Bravo : tous vos meilleurs scores dépassent 75 %.</p>"}</div>`}
+function fiches(){app.innerHTML=`<div class="card"><h2>Fiches de révision</h2><button class="b g noprint" onclick="print()">🖨 Imprimer</button>${L.map(l=>`<div class="rule"><b>${l.t}</b><br>${l.sum}</div>`).join("")}
+<h3>Terminaisons de l'imparfait</h3><table><tr><th>je</th><th>tu</th><th>il/elle</th><th>nous</th><th>vous</th><th>ils/elles</th></tr><tr><td>-ais</td><td>-ais</td><td>-ait</td><td>-ions</td><td>-iez</td><td>-aient</td></tr></table></div>`}
+function search(){app.innerHTML=`<div class="card"><h2>Recherche</h2><input type="search" id="s" placeholder="Mot-clé (ex. imparfait, thèse, cause…)"><div id="out"></div></div><div class="card"><h3>Glossaire</h3>${Object.entries(GLOS).map(([k,v])=>`<p><b>${k}</b> : ${v}</p>`).join("")}</div>`;
+$("#s").oninput=e=>{const t=norm(e.target.value);if(t.length<2){$("#out").innerHTML="";return}
+const tmp=document.createElement("div");const r=L.filter(l=>{tmp.innerHTML=l.body;return norm(l.t+" "+tmp.textContent+" "+l.sum).includes(t)});
+const g=Object.entries(GLOS).filter(([k,v])=>norm(k+" "+v).includes(t));
+$("#out").innerHTML=r.map(l=>`<p>📖 <a href="#" onclick="go('${l.id}');return false">${l.t}</a></p>`).join("")+g.map(([k,v])=>`<p>📚 <b>${k}</b> : ${v}</p>`).join("")||"<p>Aucun résultat.</p>"}}
+go("home");
+</script></body></html>
